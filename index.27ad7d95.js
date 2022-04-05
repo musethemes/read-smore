@@ -523,7 +523,8 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _src = require("../../src");
 var _srcDefault = parcelHelpers.interopDefault(_src);
 const readMores = document.querySelectorAll('.js-read-smore');
-_srcDefault.default(readMores).init();
+const RMs = _srcDefault.default(readMores);
+RMs.init();
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","../../src":"8lqZg"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -566,6 +567,7 @@ exports.default = _readSmoreJsDefault.default;
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _utils = require("./utils");
+var _readSmoreCss = require("./read-smore.css");
 'use strict';
 /**
  * Defaults
@@ -674,7 +676,7 @@ var _utils = require("./utils");
 ReadSmore.options = defaultOptions;
 exports.default = ReadSmore;
 
-},{"./utils":"jxTvD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jxTvD":[function(require,module,exports) {
+},{"./utils":"jxTvD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./read-smore.css":"ayeL7"}],"jxTvD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 /**
@@ -723,6 +725,6 @@ function getTagsCount(str) {
     return ((str || '').match(tags) || []).length;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["kwnZB","86ByF"], "86ByF", "parcelRequire1eae")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ayeL7":[function() {},{}]},["kwnZB","86ByF"], "86ByF", "parcelRequire1eae")
 
 //# sourceMappingURL=index.27ad7d95.js.map
