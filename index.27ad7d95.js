@@ -142,7 +142,7 @@
       this[globalName] = mainExports;
     }
   }
-})({"kwnZB":[function(require,module,exports) {
+})({"8BDuW":[function(require,module,exports) {
 "use strict";
 var HMR_HOST = null;
 var HMR_PORT = null;
@@ -167,8 +167,7 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
         if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
             if (it) o = it;
             var i = 0;
-            var F = function F() {
-            };
+            var F = function F() {};
             return {
                 s: F,
                 n: function n() {
@@ -224,7 +223,7 @@ function _arrayLikeToArray(arr, len) {
     for(var i = 0, arr2 = new Array(len); i < len; i++)arr2[i] = arr[i];
     return arr2;
 }
-/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE */ /*::
+/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE, chrome, browser */ /*::
 import type {
   HMRAsset,
   HMRMessage,
@@ -251,11 +250,18 @@ interface ParcelModule {
     _disposeCallbacks: Array<(mixed) => void>,
   |};
 }
+interface ExtensionContext {
+  runtime: {|
+    reload(): void,
+  |};
+}
 declare var module: {bundle: ParcelRequire, ...};
 declare var HMR_HOST: string;
 declare var HMR_PORT: string;
 declare var HMR_ENV_HASH: string;
 declare var HMR_SECURE: boolean;
+declare var chrome: ExtensionContext;
+declare var browser: ExtensionContext;
 */ var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
 function Module(moduleName) {
@@ -265,8 +271,7 @@ function Module(moduleName) {
         _acceptCallbacks: [],
         _disposeCallbacks: [],
         accept: function accept(fn) {
-            this._acceptCallbacks.push(fn || function() {
-            });
+            this._acceptCallbacks.push(fn || function() {});
         },
         dispose: function dispose(fn) {
             this._disposeCallbacks.push(fn);
@@ -275,7 +280,7 @@ function Module(moduleName) {
     module.bundle.hotData = undefined;
 }
 module.bundle.Module = Module;
-var checkedAssets, acceptedAssets, assetsToAccept;
+var checkedAssets, acceptedAssets, assetsToAccept /*: Array<[ParcelRequire, string]> */ ;
 function getHostname() {
     return HMR_HOST || (location.protocol.indexOf('http') === 0 ? location.hostname : 'localhost');
 }
@@ -289,10 +294,8 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
     var protocol = HMR_SECURE || location.protocol == 'https:' && !/localhost|127.0.0.1|0.0.0.0/.test(hostname) ? 'wss' : 'ws';
     var ws = new WebSocket(protocol + '://' + hostname + (port ? ':' + port : '') + '/'); // $FlowFixMe
     ws.onmessage = function(event) {
-        checkedAssets = {
-        };
-        acceptedAssets = {
-        };
+        checkedAssets = {} /*: {|[string]: boolean|} */ ;
+        acceptedAssets = {} /*: {|[string]: boolean|} */ ;
         assetsToAccept = [];
         var data = JSON.parse(event.data);
         if (data.type === 'update') {
@@ -313,7 +316,12 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
                     var id = assetsToAccept[i][1];
                     if (!acceptedAssets[id]) hmrAcceptRun(assetsToAccept[i][0], id);
                 }
-            } else window.location.reload();
+            } else if ('reload' in location) location.reload();
+            else {
+                // Web extension context
+                var ext = typeof chrome === 'undefined' ? typeof browser === 'undefined' ? null : browser : chrome;
+                if (ext && ext.runtime && ext.runtime.reload) ext.runtime.reload();
+            }
         }
         if (data.type === 'error') {
             // Log parcel errors to console
@@ -407,7 +415,7 @@ function reloadCSS() {
             var href = links[i].getAttribute('href');
             var hostname = getHostname();
             var servedFromHMRServer = hostname === 'localhost' ? new RegExp('^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):' + getPort()).test(href) : href.indexOf(hostname + ':' + getPort());
-            var absolute = /^https?:\/\//i.test(href) && href.indexOf(window.location.origin) !== 0 && !servedFromHMRServer;
+            var absolute = /^https?:\/\//i.test(href) && href.indexOf(location.origin) !== 0 && !servedFromHMRServer;
             if (!absolute) updateLink(links[i]);
         }
         cssTimeout = null;
@@ -499,8 +507,7 @@ function hmrAcceptCheckOne(bundle, id, depsByBundle) {
 }
 function hmrAcceptRun(bundle, id) {
     var cached = bundle.cache[id];
-    bundle.hotData = {
-    };
+    bundle.hotData = {};
     if (cached && cached.hot) cached.hot.data = bundle.hotData;
     if (cached && cached.hot && cached.hot._disposeCallbacks.length) cached.hot._disposeCallbacks.forEach(function(cb) {
         cb(bundle.hotData);
@@ -526,7 +533,7 @@ const readMores = document.querySelectorAll('.js-read-smore');
 const RMs = _srcDefault.default(readMores);
 RMs.init();
 
-},{"../../src":"8lqZg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8lqZg":[function(require,module,exports) {
+},{"../../src":"8lqZg","@parcel/transformer-js/src/esmodule-helpers.js":"h2BEm"}],"8lqZg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _readSmoreJs = require("./read-smore.js");
@@ -534,7 +541,7 @@ var _readSmoreJsDefault = parcelHelpers.interopDefault(_readSmoreJs);
 var _readSmoreCss = require("./read-smore.css");
 exports.default = _readSmoreJsDefault.default;
 
-},{"./read-smore.js":"7XPz6","./read-smore.css":"ayeL7","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7XPz6":[function(require,module,exports) {
+},{"./read-smore.js":"7XPz6","./read-smore.css":"ayeL7","@parcel/transformer-js/src/esmodule-helpers.js":"h2BEm"}],"7XPz6":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _utils = require("./utils");
@@ -547,7 +554,10 @@ var _utils = require("./utils");
     charsCount: 150,
     moreText: 'Read More',
     lessText: 'Read Less',
-    isInline: false
+    ellipse: '...',
+    isInline: false,
+    animate: false,
+    animationDuration: 400
 };
 /**
  * ReadSmore
@@ -555,8 +565,7 @@ var _utils = require("./utils");
  * @param {Object} options
  * @returns
  */ function ReadSmore(element, options) {
-    options = Object.assign({
-    }, defaultOptions, options);
+    options = Object.assign({}, defaultOptions, options);
     // Internal Settings
     let settings = {
         originalContentArr: [],
@@ -567,7 +576,15 @@ var _utils = require("./utils");
    * Loop over instances and begin truncation procress
    * @public
    */ function init() {
-        for(let i = 0, n = element.length; i < n; ++i)truncate(element[i], i);
+        document.fonts.ready.then(function() {
+            for(let i = 0, n = element.length; i < n; ++i){
+                // Set the original height for animation purposes
+                if (options.animate) $(element[i]).attr('data-read-smore-full-height', Math.ceil($(element[i]).outerHeight(true)));
+                truncate(element[i], i);
+                // Set the truncated height for animation purposes
+                if (options.animate) $(element[i]).attr('data-read-smore-truncated-height', Math.ceil($(element[i]).outerHeight(true)));
+            }
+        });
     }
     /**
    * Ellpise Content
@@ -575,11 +592,12 @@ var _utils = require("./utils");
    * @param {String} str - content string.
    * @param {Number} max - Number of words||chars2 to show before truncation.
    * @param {Bool} isChars - is by chars
-   */ function ellipse(str, max, isChars = false) {
+   */ function ellipse1(str, max, isChars = false) {
         // Trim starting/ending empty spaces
         const trimedSpaces = _utils.trimSpaces(str);
-        if (isChars) return trimedSpaces.split('').slice(0, max).join('') + '...';
-        return trimedSpaces.split(/\s+/).slice(0, max).join(' ') + '...';
+        const ellipse = options.ellipse || '...';
+        if (isChars) return trimedSpaces.split('').slice(0, max).join('') + ellipse;
+        return trimedSpaces.split(/\s+/).slice(0, max).join(' ') + ellipse;
     }
     /**
    * Truncate Logic
@@ -588,11 +606,11 @@ var _utils = require("./utils");
    */ function truncate(el, idx) {
         // User defined word count or defaults
         const numberWords = el.dataset.readSmoreWords || options.wordsCount;
-        // User defined chars (if exists) or word count
-        const numberCount = el.dataset.readSmoreChars || numberWords;
+        // User defined chars (if exists) or defaults
+        const numberCount = el.dataset.readSmoreChars || options.wordsCount;
         const originalContent = el.innerHTML;
         // Ellipser: content, count, is chars bool
-        const truncateContent = ellipse(originalContent, numberCount, el.dataset.readSmoreChars ? true : false);
+        const truncateContent = ellipse1(originalContent, numberCount, el.dataset.readSmoreChars ? true : false);
         const originalContentCount = el.dataset.readSmoreWords ? _utils.getWordCount(originalContent) : _utils.getCharCount(originalContent);
         settings.originalContentArr.push(originalContent);
         settings.truncatedContentArr.push(truncateContent);
@@ -631,10 +649,32 @@ var _utils = require("./utils");
                 element[idx].innerHTML = settings.originalContentArr[idx];
                 target.innerHTML = options.lessText;
                 target.dataset.clicked = true;
+                // Animate height, replace the content at the end
+                if (options.animate) {
+                    $(element[idx]).css('height', $(element[idx]).attr('data-read-smore-truncated-height'));
+                    $(element[idx]).animate({
+                        height: $(element[idx]).attr('data-read-smore-full-height') + 'px'
+                    }, options.animationDuration, function() {
+                        $(this).height('auto');
+                    });
+                }
             } else {
-                element[idx].innerHTML = settings.truncatedContentArr[idx];
                 target.innerHTML = options.moreText;
                 target.dataset.clicked = false;
+                // Animate height, replace the content at the end
+                if (options.animate) {
+                    $(element[idx]).css({
+                        'height': $(element[idx]).attr('data-read-smore-full-height'),
+                        'overflow': 'hidden'
+                    });
+                    $(element[idx]).animate({
+                        height: $(element[idx]).attr('data-read-smore-truncated-height') + 'px'
+                    }, options.animationDuration, function() {
+                        $(this).height('auto');
+                        $(this).css('overflow', '');
+                        element[idx].innerHTML = settings.truncatedContentArr[idx];
+                    });
+                } else element[idx].innerHTML = settings.truncatedContentArr[idx];
             }
         });
     }
@@ -646,7 +686,7 @@ var _utils = require("./utils");
 ReadSmore.options = defaultOptions;
 exports.default = ReadSmore;
 
-},{"./utils":"jxTvD","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jxTvD":[function(require,module,exports) {
+},{"./utils":"jxTvD","@parcel/transformer-js/src/esmodule-helpers.js":"h2BEm"}],"jxTvD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 /**
@@ -695,7 +735,7 @@ function getTagsCount(str) {
     return ((str || '').match(tags) || []).length;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"h2BEm"}],"h2BEm":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -725,6 +765,6 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"ayeL7":[function() {},{}]},["kwnZB","86ByF"], "86ByF", "parcelRequire1eae")
+},{}],"ayeL7":[function() {},{}]},["8BDuW","86ByF"], "86ByF", "parcelRequire1eae")
 
 //# sourceMappingURL=index.27ad7d95.js.map
