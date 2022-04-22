@@ -14,7 +14,7 @@ const defaultOptions = {
   lessText: 'Read Less',
   ellipse: '...',
   isInline: false,
-  animate: true,
+  animate: false,
   animationDuration: 400
 };
 
@@ -43,7 +43,6 @@ function ReadSmore(element, options) {
       for (let i = 0, n = element.length; i < n; ++i) {
         // Set the original height for animation purposes
         if(options.animate) {
-          //$(element[i]).css('overflow', 'auto');
           $(element[i]).attr('data-read-smore-full-height', Math.ceil($(element[i]).outerHeight(true)));
         }
 
