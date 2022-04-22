@@ -12,7 +12,10 @@ const defaultOptions = {
   charsCount: 150,
   moreText: 'Read More',
   lessText: 'Read Less',
+  ellipse: '...',
   isInline: false,
+  animate: true,
+  animationDuration: 400
 };
 
 /**
@@ -36,9 +39,22 @@ function ReadSmore(element, options) {
    * @public
    */
   function init() {
-    for (let i = 0, n = element.length; i < n; ++i) {
-      truncate(element[i], i);
-    }
+    document.fonts.ready.then(function() {
+      for (let i = 0, n = element.length; i < n; ++i) {
+        // Set the original height for animation purposes
+        if(options.animate) {
+          //$(element[i]).css('overflow', 'auto');
+          $(element[i]).attr('data-read-smore-full-height', Math.ceil($(element[i]).outerHeight(true)));
+        }
+
+        truncate(element[i], i);
+
+        // Set the truncated height for animation purposes
+        if(options.animate) {
+          $(element[i]).attr('data-read-smore-truncated-height', Math.ceil($(element[i]).outerHeight(true)));
+        }
+      }
+    });
   }
 
   /**
@@ -51,12 +67,13 @@ function ReadSmore(element, options) {
   function ellipse(str, max, isChars = false) {
     // Trim starting/ending empty spaces
     const trimedSpaces = trimSpaces(str);
+    const ellipse = options.ellipse || '...';
 
     if (isChars) {
-      return trimedSpaces.split('').slice(0, max).join('') + '...';
+      return trimedSpaces.split('').slice(0, max).join('') + ellipse;
     }
 
-    return trimedSpaces.split(/\s+/).slice(0, max).join(' ') + '...';
+    return trimedSpaces.split(/\s+/).slice(0, max).join(' ') + ellipse;
   }
 
   /**
@@ -67,8 +84,8 @@ function ReadSmore(element, options) {
   function truncate(el, idx) {
     // User defined word count or defaults
     const numberWords = el.dataset.readSmoreWords || options.wordsCount;
-    // User defined chars (if exists) or word count
-    const numberCount = el.dataset.readSmoreChars || numberWords;
+    // User defined chars (if exists) or defaults
+    const numberCount = el.dataset.readSmoreChars || options.wordsCount;
     const originalContent = el.innerHTML;
     // Ellipser: content, count, is chars bool
     const truncateContent = ellipse(
@@ -127,10 +144,39 @@ function ReadSmore(element, options) {
         element[idx].innerHTML = settings.originalContentArr[idx];
         target.innerHTML = options.lessText;
         target.dataset.clicked = true;
+
+        // Animate height, replace the content at the end
+        if(options.animate) {
+          $(element[idx]).css('height', $(element[idx]).attr('data-read-smore-truncated-height'));
+
+          $(element[idx]).animate({
+              height: $(element[idx]).attr('data-read-smore-full-height') + 'px'
+          }, options.animationDuration, function(){
+              $(this).height('auto');
+          });
+        }
       } else {
-        element[idx].innerHTML = settings.truncatedContentArr[idx];
         target.innerHTML = options.moreText;
         target.dataset.clicked = false;
+
+        // Animate height, replace the content at the end
+        if(options.animate) {
+          $(element[idx]).css({
+            'height': $(element[idx]).attr('data-read-smore-full-height'),
+            'overflow': 'hidden'
+          });
+
+          $(element[idx]).animate({
+              height: $(element[idx]).attr('data-read-smore-truncated-height') + 'px'
+          }, options.animationDuration, function(){
+              $(this).height('auto');
+              $(this).css('overflow', '');
+
+              element[idx].innerHTML = settings.truncatedContentArr[idx];
+          });
+        } else {
+          element[idx].innerHTML = settings.truncatedContentArr[idx];
+        }
       }
     });
   }
