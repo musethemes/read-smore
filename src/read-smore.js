@@ -15,7 +15,8 @@ const defaultOptions = {
   ellipse: '...',
   isInline: false,
   animate: false,
-  animationDuration: 400
+  animationDuration: 400,
+  animationOverflow: false
 };
 
 /**
@@ -43,6 +44,11 @@ function ReadSmore(element, options) {
       for (let i = 0, n = element.length; i < n; ++i) {
         // Set the original height for animation purposes
         if(options.animate) {
+          // Set the overflow to auto so that the height can be calculated
+          if(options.animationOverflow) {
+            $(element[i]).css('overflow', 'auto');
+          }
+          
           $(element[i]).attr('data-read-smore-full-height', Math.ceil($(element[i]).outerHeight(true)));
         }
 
