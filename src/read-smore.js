@@ -84,7 +84,7 @@ function ReadSmore(element, options) {
     // User defined word count or defaults
     const numberWords = el.dataset.readSmoreWords || options.wordsCount;
     // User defined chars (if exists) or defaults
-    const numberCount = el.dataset.readSmoreChars || options.wordsCount;
+    const numberCount = el.dataset.readSmoreChars || numberWords;
     const originalContent = el.innerHTML;
     // Ellipser: content, count, is chars bool
     const truncateContent = ellipse(
