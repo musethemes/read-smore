@@ -175,7 +175,12 @@ function ReadSmore(element, options) {
               height: $(element[idx]).attr('data-read-smore-truncated-height') + 'px'
           }, options.animationDuration, function(){
               $(this).height('auto');
-              $(this).css('overflow', '');
+
+              if(options.animationOverflow) {
+                $(this).css('overflow', 'auto');
+              } else {
+                $(this).css('overflow', '');
+              }
 
               element[idx].innerHTML = settings.truncatedContentArr[idx];
           });
