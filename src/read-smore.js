@@ -120,10 +120,10 @@ function ReadSmore(element, options) {
   function createLink(idx) {
     const linkWrap = document.createElement('span');
 
-    linkWrap.className = `${options.blockClassName}__link-wrap`;
+    linkWrap.className = `${options.blockClassName}__link-wrap read-smore__link-wrap`;
 
     linkWrap.innerHTML = `<a id=${options.blockClassName}_${idx}
-                             class=${options.blockClassName}__link
+                             class=${options.blockClassName}__link read-smore__link
                              style="cursor:pointer;">
                              ${options.moreText}
                           </a>`;
@@ -145,6 +145,7 @@ function ReadSmore(element, options) {
     link.addEventListener('click', (e) => {
       element[idx].classList.toggle('is-expanded');
       const target = e.currentTarget;
+
       if (target.dataset.clicked !== 'true') {
         element[idx].innerHTML = settings.originalContentArr[idx];
         target.innerHTML = options.lessText;
