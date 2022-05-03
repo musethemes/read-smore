@@ -42,6 +42,11 @@ function ReadSmore(element, options) {
   function init() {
     document.fonts.ready.then(function() {
       for (let i = 0, n = element.length; i < n; ++i) {
+        // Set the inline attribute if needed
+        if(options.isInline) {
+          $(element[i]).attr('data-read-smore-inline', 'true');
+        }
+        
         // Set the original height for animation purposes
         if(options.animate) {
           // Set the overflow to auto so that the height can be calculated
@@ -49,12 +54,24 @@ function ReadSmore(element, options) {
             $(element[i]).css('overflow', 'auto');
           }
           
+          // If the button is inline create a fake invisible button to calculate the height
+          if(options.isInline) {
+            createLink(i);
+            $(element[i]).find('.read-smore__link-wrap').css('opacity', '0');
+          }
+          
+          // Store the original full height of the block
           $(element[i]).attr('data-read-smore-full-height', Math.ceil($(element[i]).outerHeight(true)));
+
+          // We have the height, so remove the fake button
+          if(options.isInline) {
+            $(element[i]).find('.read-smore__link-wrap').remove();
+          }
         }
 
         truncate(element[i], i);
 
-        // Set the truncated height for animation purposes
+        // Store the truncated height for animation purposes
         if(options.animate) {
           $(element[i]).attr('data-read-smore-truncated-height', Math.ceil($(element[i]).outerHeight(true)));
         }
@@ -117,19 +134,30 @@ function ReadSmore(element, options) {
    * Creates and Inserts Read More Link
    * @param {number} idx - index reference of looped item
    */
-  function createLink(idx) {
+  function createLink(idx, clicked = false) {
     const linkWrap = document.createElement('span');
+    let linkText = options.moreText;
+
+    // If button was clicked, change the text
+    if(clicked) {
+      linkText = options.lessText;
+    }
 
     linkWrap.className = `${options.blockClassName}__link-wrap read-smore__link-wrap`;
 
     linkWrap.innerHTML = `<a id=${options.blockClassName}_${idx}
                              class=${options.blockClassName}__link read-smore__link
-                             style="cursor:pointer;">
-                             ${options.moreText}
+                             style="cursor:pointer;"
+                             data-clicked="${clicked}">
+                             ${linkText}
                           </a>`;
 
     // Inset created link
-    element[idx].after(linkWrap);
+    if(options.isInline) {
+      element[idx].append(linkWrap);
+    } else {
+      element[idx].after(linkWrap);
+    }
 
     // Call link click handler
     handleLinkClick(idx);
@@ -150,6 +178,11 @@ function ReadSmore(element, options) {
         element[idx].innerHTML = settings.originalContentArr[idx];
         target.innerHTML = options.lessText;
         target.dataset.clicked = true;
+
+        // Recreate the link
+        if(options.isInline) {
+          createLink(idx, true);
+        }
 
         // Animate height, replace the content at the end
         if(options.animate) {
@@ -184,9 +217,19 @@ function ReadSmore(element, options) {
               }
 
               element[idx].innerHTML = settings.truncatedContentArr[idx];
+              
+              // Recreate the link
+              if(options.isInline) {
+                createLink(idx, false);
+              }
           });
         } else {
           element[idx].innerHTML = settings.truncatedContentArr[idx];
+
+          // Recreate the link
+          if(options.isInline) {
+            createLink(idx, false);
+          }
         }
       }
     });
